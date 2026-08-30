@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { Layers, Sparkles, Percent, Wallet, TrendingDown } from 'lucide-react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../../theme/colors';
 
 const materialCosts = [
   { name: 'Matte 300gsm', price: 'PKR 250 /unit' },

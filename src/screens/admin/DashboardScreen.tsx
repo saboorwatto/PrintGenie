@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { colors } from '../theme/colors';
-import RevenueChart from '../components/RevenueChart';
+import { colors } from '../../theme/colors';
+import RevenueChart from '../../components/RevenueChart';
 
 export default function DashboardScreen({ navigation }: any) {
   return (
@@ -47,7 +47,7 @@ export default function DashboardScreen({ navigation }: any) {
         </View>
                 <TouchableOpacity
           style={styles.aiMonitorCard}
-          onPress={() => navigation?.navigate?.('AIMonitoring')}
+          onPress={() => navigation.getParent()?.navigate('AIMonitoring')}
         >
           <Text style={styles.aiMonitorLabel}>AI MODEL STATUS</Text>
           <View style={styles.pendingRow}>

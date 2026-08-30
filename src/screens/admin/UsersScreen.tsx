@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar } from 'react-native';
 import { Search, MoreVertical } from 'lucide-react-native';
-import { colors } from '../theme/colors';
-import Avatar from '../components/Avatar';
+import { colors } from '../../theme/colors';
+import Avatar from '../../components/Avatar';
 
 const users = [
   { initials: 'AK', name: 'Ali Khan', email: 'ali@gmai...', role: 'Customer', status: 'Active', imageUrl: null },
@@ -32,7 +32,7 @@ export default function UsersScreen() {
               key={user.initials + i}
               style={[styles.userRow, i !== users.length - 1 && styles.userRowBorder]}
             >
-                            <Avatar
+              <Avatar
                 imageUrl={user.imageUrl}
                 initials={user.initials}
                 bgColor={colors.royalBlue + '22'}

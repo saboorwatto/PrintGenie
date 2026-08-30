@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar } from 'react-native';
 import { Search, Star, MapPin } from 'lucide-react-native';
-import { colors } from '../theme/colors';
-import Avatar from '../components/Avatar';
+import { colors } from '../../theme/colors';
+import Avatar from '../../components/Avatar';
 
 const shops = [
   { initial: 'P', color: '#DCFCE7', textColor: '#16A34A', name: 'Print Palace', location: 'Lahore, Pun...', rating: '4.8', status: 'Active', imageUrl: null },

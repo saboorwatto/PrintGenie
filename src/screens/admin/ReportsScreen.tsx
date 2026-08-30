@@ -9,10 +9,10 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import { colors } from '../theme/colors';
-import { API_BASE_URL } from '../api/config';
+import { colors } from '../../theme/colors';
+import { API_BASE_URL } from '../../api/config';
 
 const topProducts = [
   { name: 'Business Cards', orders: '520 Orders' },

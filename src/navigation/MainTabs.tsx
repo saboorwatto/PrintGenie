@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Home, Users, Store, BarChart3, SlidersHorizontal } from 'lucide-react-native';
 import { colors } from '../theme/colors';
 
-import DashboardScreen from '../screens/DashboardScreen';
-import UsersScreen from '../screens/UsersScreen';
-import ShopsScreen from '../screens/ShopsScreen';
-import ReportsScreen from '../screens/ReportsScreen';
-import PricingScreen from '../screens/PricingScreen';
+import DashboardScreen from '../screens/admin/DashboardScreen';
+import UsersScreen from '../screens/admin/UsersScreen';
+import ShopsScreen from '../screens/admin/ShopsScreen';
+import ReportsScreen from '../screens/admin/ReportsScreen';
+import PricingScreen from '../screens/admin/PricingScreen';
 
 const Tab = createBottomTabNavigator();
 
