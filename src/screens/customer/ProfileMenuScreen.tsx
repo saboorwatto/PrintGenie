@@ -52,7 +52,7 @@ export default function ProfileMenuScreen({ navigation }: any) {
 
         <TouchableOpacity
           style={styles.logoutRow}
-          onPress={() => navigation?.getParent?.()?.reset?.({ index: 0, routes: [{ name: 'Login' }] })}
+          onPress={() => navigation.getParent()?.reset({ index: 0, routes: [{ name: 'Auth' }] })}
         >
           <View style={styles.logoutIconBox}>
             <LogOut size={18} color="#DC2626" />

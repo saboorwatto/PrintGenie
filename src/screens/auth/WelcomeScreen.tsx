@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { Package } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 export default function WelcomeScreen({ navigation }: any) {
   return (
@@ -17,10 +17,7 @@ export default function WelcomeScreen({ navigation }: any) {
       </Text>
 
       <View style={styles.illustrationBox}>
-        <View style={styles.logoIconBox}>
-          <Package size={32} color={colors.navy} />
-        </View>
-        <Text style={styles.logoTitle}>PrintGenie</Text>
+        <PrintGenieLogo size="large" style={styles.logo} />
       </View>
 
       <TouchableOpacity
@@ -39,14 +36,17 @@ const styles = StyleSheet.create({
   heroTitle: { color: colors.white, fontSize: 32, fontWeight: '800', lineHeight: 38 },
   heroSubtitle: { color: colors.textMuted, fontSize: 14, lineHeight: 20, marginTop: 12, marginBottom: 24 },
   illustrationBox: {
-    flex: 1, backgroundColor: colors.royalBlue + '22', borderRadius: 20,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 24, gap: 12,
+    flex: 1,
+    backgroundColor: colors.royalBlue + '38',
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: colors.gold + '60',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    padding: 24,
   },
-  logoIconBox: {
-    width: 64, height: 64, borderRadius: 16, backgroundColor: colors.gold,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  logoTitle: { color: colors.white, fontSize: 18, fontWeight: '700' },
+  logo: { width: 240, height: 96 },
   getStartedButton: { backgroundColor: colors.gold, borderRadius: 14, paddingVertical: 17, alignItems: 'center' },
   getStartedButtonText: { color: colors.navy, fontSize: 16, fontWeight: '700' },
 });

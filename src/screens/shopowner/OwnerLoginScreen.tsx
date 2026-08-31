@@ -9,8 +9,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Package, Mail, Lock } from 'lucide-react-native';
+import { ArrowLeft, Mail, Lock } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 export default function OwnerLoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -21,14 +22,21 @@ export default function OwnerLoginScreen({ navigation }: any) {
     navigation.reset({ index: 0, routes: [{ name: 'ShopOwnerTabs' }] });
   };
 
+  const handleBack = () => {
+    navigation.getParent()?.goBack();
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
+
+      <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <ArrowLeft size={18} color={colors.navy} />
+      </TouchableOpacity>
+
       <View style={styles.body}>
         <View style={styles.logoBox}>
-          <View style={styles.logoIconBox}>
-            <Package size={26} color={colors.navy} />
-          </View>
+          <PrintGenieLogo size="medium" style={styles.logo} />
           <Text style={styles.heroTitle}>Welcome Back!</Text>
           <Text style={styles.heroSubtitle}>Login to your shop account</Text>
         </View>
@@ -60,7 +68,7 @@ export default function OwnerLoginScreen({ navigation }: any) {
           />
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword', { role: 'shopowner' })}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -81,9 +89,13 @@ export default function OwnerLoginScreen({ navigation }: any) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.white },
-  body: { flex: 1, paddingHorizontal: 24, paddingTop: 90 },
+  backButton: {
+    width: 36, height: 36, borderRadius: 18, backgroundColor: colors.mist,
+    alignItems: 'center', justifyContent: 'center', marginLeft: 20, marginTop: 50,
+  },
+  body: { flex: 1, paddingHorizontal: 24, paddingTop: 20 },
   logoBox: { alignItems: 'center', marginBottom: 32 },
-  logoIconBox: { width: 64, height: 64, borderRadius: 16, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
+  logo: { marginBottom: 16 },
   heroTitle: { fontSize: 22, fontWeight: '800', color: colors.navy },
   heroSubtitle: { fontSize: 13, color: colors.textMuted, marginTop: 4 },
   label: { fontSize: 13, fontWeight: '600', color: colors.slate, marginBottom: 8 },

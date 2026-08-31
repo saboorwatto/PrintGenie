@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { ArrowLeft, Mail } from 'lucide-react-native';
+import { ArrowLeft } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 export default function VerifyEmailScreen({ navigation }: any) {
   const [code, setCode] = useState(['', '', '', '', '', '']);
@@ -39,12 +40,7 @@ export default function VerifyEmailScreen({ navigation }: any) {
       </TouchableOpacity>
 
       <View style={styles.body}>
-        <View style={styles.logoRow}>
-          <View style={styles.logoIconBox}>
-            <Mail size={16} color={colors.navy} />
-          </View>
-          <Text style={styles.logoTitle}>PrintGenie</Text>
-        </View>
+        <PrintGenieLogo size="small" style={styles.logo} />
 
         <Text style={styles.heroTitle}>Verify Your Email</Text>
         <Text style={styles.heroSubtitle}>Enter the 6-digit code sent to your email address.</Text>
@@ -90,12 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', marginLeft: 20, marginTop: 50,
   },
   body: { flex: 1, paddingHorizontal: 24, paddingTop: 20 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  logoIconBox: {
-    width: 36, height: 36, borderRadius: 10, backgroundColor: colors.gold,
-    alignItems: 'center', justifyContent: 'center', marginRight: 10,
-  },
-  logoTitle: { color: colors.navy, fontSize: 18, fontWeight: '700' },
+  logo: { marginBottom: 24, alignSelf: 'flex-start' },
   heroTitle: { color: colors.navy, fontSize: 24, fontWeight: '800' },
   heroSubtitle: { color: colors.textMuted, fontSize: 13, marginTop: 8, marginBottom: 28 },
   codeRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 24 },

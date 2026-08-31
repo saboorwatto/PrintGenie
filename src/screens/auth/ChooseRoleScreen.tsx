@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { ArrowLeft, ShoppingCart, Store, Cog } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 const roles = [
   { id: 'customer', icon: ShoppingCart, title: 'Customer', subtitle: 'I want to place orders' },
@@ -27,6 +28,8 @@ export default function ChooseRoleScreen({ navigation }: any) {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <ArrowLeft size={18} color={colors.navy} />
       </TouchableOpacity>
+
+      <PrintGenieLogo size="small" style={styles.logo} />
 
       <Text style={styles.headerLabel}>CHOOSE YOUR ROLE</Text>
       <Text style={styles.headerTitle}>How will you use PrintGenie?</Text>
@@ -65,8 +68,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.white, paddingHorizontal: 24, paddingTop: 50, paddingBottom: 40 },
   backButton: {
     width: 36, height: 36, borderRadius: 18, backgroundColor: colors.mist,
-    alignItems: 'center', justifyContent: 'center', marginBottom: 24,
+    alignItems: 'center', justifyContent: 'center', marginBottom: 16,
   },
+  logo: { marginBottom: 20, alignSelf: 'flex-start' },
   headerLabel: { color: colors.royalBlue, fontSize: 12, fontWeight: '700', letterSpacing: 1, marginBottom: 6 },
   headerTitle: { color: colors.navy, fontSize: 24, fontWeight: '800', marginBottom: 8 },
   headerSubtitle: { color: colors.textMuted, fontSize: 13, marginBottom: 24 },

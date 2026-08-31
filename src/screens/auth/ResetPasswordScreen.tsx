@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { ArrowLeft, Sparkles, Mail } from 'lucide-react-native';
+import { ArrowLeft, Sparkles } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
-export default function ResetPasswordScreen({ navigation }: any) {
+type ResetRole = 'customer' | 'admin' | 'shopowner';
+
+const ROLE_COPY: Record<ResetRole, string> = {
+  customer: 'Enter your email and we\'ll send you a link to reset your PrintGenie account password.',
+  admin: 'Enter your admin email and we\'ll send you a link to reset your admin panel password.',
+  shopowner: 'Enter your shop email and we\'ll send you a link to reset your shop account password.',
+};
+
+export default function ResetPasswordScreen({ navigation, route }: any) {
+  const role: ResetRole = route?.params?.role ?? 'customer';
   const [email, setEmail] = useState('');
 
   const handleSendLink = () => {
-    // TODO: wire up to POST /api/auth/reset-password from the SDS
-    navigation?.goBack?.();
+    // TODO: wire up to POST /api/auth/reset-password from the SDS (pass role in request body)
+    navigation.goBack();
   };
 
   return (
@@ -20,17 +30,10 @@ export default function ResetPasswordScreen({ navigation }: any) {
       </TouchableOpacity>
 
       <View style={styles.body}>
-        <View style={styles.logoRow}>
-          <View style={styles.logoIconBox}>
-            <Mail size={16} color={colors.navy} />
-          </View>
-          <Text style={styles.logoTitle}>PrintGenie</Text>
-        </View>
+        <PrintGenieLogo size="small" style={styles.logo} />
 
         <Text style={styles.heroTitle}>Reset Password</Text>
-        <Text style={styles.heroSubtitle}>
-          Enter your email and we'll send you a link to reset your password.
-        </Text>
+        <Text style={styles.heroSubtitle}>{ROLE_COPY[role]}</Text>
 
         <View style={styles.iconCircle}>
           <Sparkles size={26} color={colors.royalBlue} />
@@ -62,12 +65,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', marginLeft: 20, marginTop: 50,
   },
   body: { flex: 1, paddingHorizontal: 24, paddingTop: 20 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  logoIconBox: {
-    width: 36, height: 36, borderRadius: 10, backgroundColor: colors.gold,
-    alignItems: 'center', justifyContent: 'center', marginRight: 10,
-  },
-  logoTitle: { color: colors.navy, fontSize: 18, fontWeight: '700' },
+  logo: { marginBottom: 24, alignSelf: 'flex-start' },
   heroTitle: { color: colors.navy, fontSize: 24, fontWeight: '800' },
   heroSubtitle: { color: colors.textMuted, fontSize: 13, marginTop: 8, marginBottom: 32, lineHeight: 19 },
   iconCircle: {

@@ -10,8 +10,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Package, UploadCloud, Check } from 'lucide-react-native';
+import { UploadCloud, Check } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 const CITIES = ['Lahore', 'Karachi', 'Islamabad', 'Faisalabad', 'Rawalpindi', 'Multan'];
 
@@ -35,6 +36,7 @@ export default function OwnerRegistrationScreen({ navigation }: any) {
   if (submitted) {
     return (
       <View style={styles.confirmContainer}>
+        <PrintGenieLogo size="small" style={styles.confirmLogo} />
         <View style={styles.confirmIconCircle}>
           <Check size={28} color="#16A34A" />
         </View>
@@ -57,9 +59,7 @@ export default function OwnerRegistrationScreen({ navigation }: any) {
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.logoRow}>
-          <View style={styles.logoIconBox}>
-            <Package size={20} color={colors.navy} />
-          </View>
+          <PrintGenieLogo size="small" style={styles.logo} />
           <View>
             <Text style={styles.heroTitle}>Print Shop Registration</Text>
             <Text style={styles.heroSubtitle}>Get listed on PrintGenie</Text>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.white },
   content: { padding: 24, paddingTop: 50, paddingBottom: 40 },
   logoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24, gap: 12 },
-  logoIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center' },
+  logo: { width: 100, height: 40 },
   heroTitle: { fontSize: 18, fontWeight: '800', color: colors.navy },
   heroSubtitle: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   sectionLabel: { fontSize: 11, fontWeight: '700', color: colors.textMuted, letterSpacing: 0.5, marginBottom: 10, marginTop: 8 },
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   loginPrompt: { fontSize: 13, color: colors.textMuted, textAlign: 'center' },
   loginLink: { color: colors.gold, fontWeight: '700' },
   confirmContainer: { flex: 1, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
+  confirmLogo: { marginBottom: 24 },
   confirmIconCircle: { width: 64, height: 64, borderRadius: 32, backgroundColor: '#DCFCE7', alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
   confirmTitle: { fontSize: 17, fontWeight: '700', color: colors.navy, marginBottom: 8 },
   confirmSubtitle: { fontSize: 13, color: colors.textMuted, textAlign: 'center', lineHeight: 19, marginBottom: 24 },

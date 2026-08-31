@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
+import PrintGenieLogo from '../../components/PrintGenieLogo';
 
 export default function AuthLoginScreen({ navigation, route }: any) {
   const [email, setEmail] = useState('');
@@ -42,12 +43,7 @@ export default function AuthLoginScreen({ navigation, route }: any) {
       </TouchableOpacity>
 
       <View style={styles.body}>
-        <View style={styles.logoRow}>
-          <View style={styles.logoIconBox}>
-            <Mail size={16} color={colors.navy} />
-          </View>
-          <Text style={styles.logoTitle}>PrintGenie</Text>
-        </View>
+        <PrintGenieLogo size="small" style={styles.logo} />
 
         <Text style={styles.welcomeLabel}>WELCOME BACK</Text>
         <Text style={styles.heroTitle}>Welcome Back! 👋</Text>
@@ -87,7 +83,7 @@ export default function AuthLoginScreen({ navigation, route }: any) {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity onPress={() => navigation?.navigate?.('ResetPassword')}>
+        <TouchableOpacity onPress={() => navigation.navigate('ResetPassword', { role: route?.params?.role ?? 'customer' })}>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -113,12 +109,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', marginLeft: 20, marginTop: 50,
   },
   body: { flex: 1, paddingHorizontal: 24, paddingTop: 20 },
-  logoRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 28 },
-  logoIconBox: {
-    width: 36, height: 36, borderRadius: 10, backgroundColor: colors.gold,
-    alignItems: 'center', justifyContent: 'center', marginRight: 10,
-  },
-  logoTitle: { color: colors.navy, fontSize: 18, fontWeight: '700' },
+  logo: { marginBottom: 24, alignSelf: 'flex-start' },
   welcomeLabel: { color: colors.royalBlue, fontSize: 12, fontWeight: '700', letterSpacing: 1, marginBottom: 6 },
   heroTitle: { color: colors.navy, fontSize: 26, fontWeight: '800' },
   heroSubtitle: { color: colors.textMuted, fontSize: 13, marginTop: 6, marginBottom: 28 },
