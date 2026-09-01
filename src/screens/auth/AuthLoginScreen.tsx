@@ -8,29 +8,48 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import PrintGenieLogo from '../../components/PrintGenieLogo';
+import { login } from '../../api/authApi';
+import { setToken } from '../../api/authToken';
+
+
 
 export default function AuthLoginScreen({ navigation, route }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    // TODO: wire up to POST /api/auth/login from the SDS
-    const role = route?.params?.role;
-    const rootNav = navigation.getParent();
-    if (role === 'customer') {
-      rootNav?.reset({ index: 0, routes: [{ name: 'Customer' }] });
-    } else if (role === 'admin') {
-      rootNav?.reset({ index: 0, routes: [{ name: 'Main' }] });
-    } else {
-      rootNav?.reset({ index: 0, routes: [{ name: 'Main' }] });
+  const [loading, setLoading] = useState(false);
+  const selectedRole = route?.params?.role;
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+            const response = await login(email, password);
+      setToken(response.token);
+
+      const actualRole = response.user?.role; // trust the server, not the button tapped earlier
+
+      if (actualRole === 'customer') {
+        navigation?.reset?.({ index: 0, routes: [{ name: 'Customer' }] });
+      } else if (actualRole === 'admin') {
+        navigation?.reset?.({ index: 0, routes: [{ name: 'Main' }] });
+      } else if (actualRole === 'shopOwner') {
+        navigation?.reset?.({ index: 0, routes: [{ name: 'ShopOwner' }] });
+      } else {
+        Alert.alert('Login failed', 'Unrecognized account role.');
+      }
+    } catch (err) {
+      Alert.alert('Login failed', 'Check your email and password, or try again.');
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -87,8 +106,12 @@ export default function AuthLoginScreen({ navigation, route }: any) {
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Login</Text>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color={colors.white} />
+          ) : (
+            <Text style={styles.loginButtonText}>Login</Text>
+          )}
         </TouchableOpacity>
 
         <Text style={styles.signupPrompt}>

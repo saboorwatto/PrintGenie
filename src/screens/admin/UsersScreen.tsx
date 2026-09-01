@@ -1,16 +1,37 @@
-import React from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Search, MoreVertical } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import Avatar from '../../components/Avatar';
+import { fetchUsers } from '../../api/adminApi';
 
-const users = [
-  { initials: 'AK', name: 'Ali Khan', email: 'ali@gmai...', role: 'Customer', status: 'Active', imageUrl: null },
-  { initials: 'SA', name: 'Sara A...', email: 'sara@g...', role: 'Customer', status: 'Active', imageUrl: null },
-  { initials: 'HA', name: 'Hass...', email: 'hassan...', role: 'Shop Owner', status: 'Active', imageUrl: null },
-  { initials: 'ZR', name: 'Zain...', email: 'zainab...', role: 'Customer', status: 'Inactive', imageUrl: null },
-];
 export default function UsersScreen() {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const loadUsers = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const data = await fetchUsers();
+      setUsers(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
+  const filteredUsers = users.filter((u) =>
+    u.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
@@ -23,55 +44,76 @@ export default function UsersScreen() {
             style={styles.searchInput}
             placeholder="Search users..."
             placeholderTextColor={colors.textMuted}
+            value={search}
+            onChangeText={setSearch}
           />
         </View>
 
-        <View style={styles.list}>
-          {users.map((user, i) => (
-            <View
-              key={user.initials + i}
-              style={[styles.userRow, i !== users.length - 1 && styles.userRowBorder]}
-            >
-              <Avatar
-                imageUrl={user.imageUrl}
-                initials={user.initials}
-                bgColor={colors.royalBlue + '22'}
-                textColor={colors.royalBlue}
-                size={40}
-              />
+        {loading ? (
+          <View style={styles.stateBox}>
+            <ActivityIndicator color={colors.royalBlue} />
+          </View>
+        ) : error ? (
+          <View style={styles.stateBox}>
+            <Text style={styles.stateErrorText}>Could not load users</Text>
+            <TouchableOpacity onPress={loadUsers} style={styles.stateRetryButton}>
+              <Text style={styles.stateRetryText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : filteredUsers.length === 0 ? (
+          <View style={styles.stateBox}>
+            <Text style={styles.stateEmptyText}>No users found</Text>
+          </View>
+        ) : (
+          <View style={styles.list}>
+            {filteredUsers.map((user, i) => (
+              <View
+                key={user.id ?? user.initials + i}
+                style={[styles.userRow, i !== filteredUsers.length - 1 && styles.userRowBorder]}
+              >
+                <Avatar
+                  imageUrl={user.imageUrl}
+                  initials={user.initials ?? user.name?.charAt(0) ?? '?'}
+                  bgColor={colors.royalBlue + '22'}
+                  textColor={colors.royalBlue}
+                  size={40}
+                />
 
-              <View style={styles.userInfo}>
-                <Text style={styles.userName}>{user.name}</Text>
-                <Text style={styles.userEmail}>{user.email}</Text>
-              </View>
+                <View style={styles.userInfo}>
+                  <Text style={styles.userName}>{user.name}</Text>
+                  <Text style={styles.userEmail}>{user.email}</Text>
+                </View>
 
-              <View style={styles.userRight}>
-                <Text style={styles.userRole}>{user.role}</Text>
-                <View
-                  style={[
-                    styles.statusBadge,
-                    { backgroundColor: user.status === 'Active' ? '#DCFCE7' : colors.mist },
-                  ]}
-                >
-                  <Text
+                <View style={styles.userRight}>
+                  <Text style={styles.userRole}>{user.role}</Text>
+                  <View
                     style={[
-                      styles.statusText,
-                      { color: user.status === 'Active' ? '#16A34A' : colors.slate },
+                      styles.statusBadge,
+                      { backgroundColor: user.status === 'Active' ? '#DCFCE7' : colors.mist },
                     ]}
                   >
-                    {user.status}
-                  </Text>
+                    <Text
+                      style={[
+                        styles.statusText,
+                        { color: user.status === 'Active' ? '#16A34A' : colors.slate },
+                      ]}
+                    >
+                      {user.status}
+                    </Text>
+                  </View>
                 </View>
+
+                <MoreVertical size={18} color={colors.textMuted} style={{ marginLeft: 8 }} />
               </View>
+            ))}
+          </View>
+        )}
 
-              <MoreVertical size={18} color={colors.textMuted} style={{ marginLeft: 8 }} />
-            </View>
-          ))}
-        </View>
-
-        <Text style={styles.hint}>
-          Tap ⋮ to promote, deactivate, or manage a user's role
-        </Text>
+        {!loading && !error && filteredUsers.length > 0 && (
+          <Text style={styles.hint}>
+            Tap ⋮ to promote, deactivate, or manage a user's role
+          </Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -94,15 +136,6 @@ const styles = StyleSheet.create({
   list: { backgroundColor: colors.mist, borderRadius: 16, overflow: 'hidden' },
   userRow: { flexDirection: 'row', alignItems: 'center', padding: 14 },
   userRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.border + '22' },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.royalBlue + '22',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: { color: colors.royalBlue, fontWeight: '700', fontSize: 13 },
   userInfo: { flex: 1, marginLeft: 12 },
   userName: { fontSize: 14, fontWeight: '600', color: colors.navy },
   userEmail: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
@@ -111,4 +144,9 @@ const styles = StyleSheet.create({
   statusBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 },
   statusText: { fontSize: 11, fontWeight: '600' },
   hint: { fontSize: 12, color: colors.textMuted, textAlign: 'center', marginTop: 16 },
+  stateBox: { paddingVertical: 40, alignItems: 'center' },
+  stateErrorText: { fontSize: 13, color: '#DC2626', marginBottom: 8 },
+  stateRetryButton: { paddingHorizontal: 14, paddingVertical: 8, backgroundColor: colors.mist, borderRadius: 8 },
+  stateRetryText: { fontSize: 13, fontWeight: '600', color: colors.navy },
+  stateEmptyText: { fontSize: 13, color: colors.textMuted },
 });

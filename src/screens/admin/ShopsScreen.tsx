@@ -1,17 +1,37 @@
-import React from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, ScrollView, StyleSheet, StatusBar, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Search, Star, MapPin } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import Avatar from '../../components/Avatar';
-
-const shops = [
-  { initial: 'P', color: '#DCFCE7', textColor: '#16A34A', name: 'Print Palace', location: 'Lahore, Pun...', rating: '4.8', status: 'Active', imageUrl: null },
-  { initial: 'C', color: '#FEF3C7', textColor: '#D97706', name: 'ColorMax ...', location: 'Karachi, Sin...', rating: '4.3', status: 'Active', imageUrl: null },
-  { initial: 'Q', color: '#DBEAFE', textColor: '#2563EB', name: 'Quality Pri...', location: 'Multan, Pun...', rating: '4.5', status: 'Active', imageUrl: null },
-  { initial: 'C', color: '#FEE2E2', textColor: '#DC2626', name: 'Creative ...', location: 'Faisalabad...', rating: '4.2', status: 'Inactive', imageUrl: null },
-];
+import { fetchShops } from '../../api/adminApi';
 
 export default function ShopsScreen() {
+  const [shops, setShops] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const loadShops = async () => {
+    setLoading(true);
+    setError(false);
+    try {
+      const data = await fetchShops();
+      setShops(data);
+    } catch (err) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadShops();
+  }, []);
+
+  const filteredShops = shops.filter((s) =>
+    s.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
@@ -24,56 +44,75 @@ export default function ShopsScreen() {
             style={styles.searchInput}
             placeholder="Search shops..."
             placeholderTextColor={colors.textMuted}
+            value={search}
+            onChangeText={setSearch}
           />
         </View>
 
-        <View style={styles.list}>
-          {shops.map((shop, i) => (
-            <View
-              key={shop.name + i}
-              style={[styles.shopRow, i !== shops.length - 1 && styles.shopRowBorder]}
-            >
-                              <Avatar
-                imageUrl={shop.imageUrl}
-                initials={shop.initial}
-                bgColor={shop.color}
-                textColor={shop.textColor}
-                size={40}
-                rounded={false}
-              />
+        {loading ? (
+          <View style={styles.stateBox}>
+            <ActivityIndicator color={colors.royalBlue} />
+          </View>
+        ) : error ? (
+          <View style={styles.stateBox}>
+            <Text style={styles.stateErrorText}>Could not load shops</Text>
+            <TouchableOpacity onPress={loadShops} style={styles.stateRetryButton}>
+              <Text style={styles.stateRetryText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        ) : filteredShops.length === 0 ? (
+          <View style={styles.stateBox}>
+            <Text style={styles.stateEmptyText}>No shops found</Text>
+          </View>
+        ) : (
+          <View style={styles.list}>
+            {filteredShops.map((shop, i) => (
+              <View
+                key={shop.id ?? shop.name + i}
+                style={[styles.shopRow, i !== filteredShops.length - 1 && styles.shopRowBorder]}
+              >
+                <Avatar
+                  imageUrl={shop.imageUrl}
+                  initials={shop.initial ?? shop.name?.charAt(0) ?? '?'}
+                  bgColor={shop.color ?? colors.royalBlue + '22'}
+                  textColor={shop.textColor ?? colors.royalBlue}
+                  size={40}
+                  rounded={false}
+                />
 
-              <View style={styles.shopInfo}>
-                <Text style={styles.shopName}>{shop.name}</Text>
-                <View style={styles.locationRow}>
-                  <MapPin size={11} color={colors.textMuted} />
-                  <Text style={styles.shopLocation}>{shop.location}</Text>
+                <View style={styles.shopInfo}>
+                  <Text style={styles.shopName}>{shop.name}</Text>
+                  <View style={styles.locationRow}>
+                    <MapPin size={11} color={colors.textMuted} />
+                    <Text style={styles.shopLocation}>{shop.location}</Text>
+                  </View>
                 </View>
-              </View>
 
-              <View style={styles.shopRight}>
-                <View style={styles.ratingRow}>
-                  <Star size={12} color={colors.gold} fill={colors.gold} />
-                  <Text style={styles.ratingText}>{shop.rating}</Text>
-                </View>
-                <View
-                  style={[
-                    styles.statusBadge,
-                    { backgroundColor: shop.status === 'Active' ? '#DCFCE7' : colors.mist },
-                  ]}
-                >
-                  <Text
+                <View style={styles.shopRight}>
+                  <View style={styles.ratingRow}>
+                    <Star size={12} color={colors.gold} fill={colors.gold} />
+                    <Text style={styles.ratingText}>{shop.rating}</Text>
+                  </View>
+                  <View
                     style={[
-                      styles.statusText,
-                      { color: shop.status === 'Active' ? '#16A34A' : colors.slate },
+                      styles.statusBadge,
+                      { backgroundColor: shop.status === 'Active' ? '#DCFCE7' : colors.mist },
                     ]}
                   >
-                    {shop.status}
-                  </Text>
+                    <Text
+                      style={[
+                        styles.statusText,
+                        { color: shop.status === 'Active' ? '#16A34A' : colors.slate },
+                      ]}
+                    >
+                      {shop.status}
+                    </Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -96,8 +135,6 @@ const styles = StyleSheet.create({
   list: { backgroundColor: colors.mist, borderRadius: 16, overflow: 'hidden' },
   shopRow: { flexDirection: 'row', alignItems: 'center', padding: 14 },
   shopRowBorder: { borderBottomWidth: 1, borderBottomColor: colors.border + '22' },
-  avatar: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { fontWeight: '700', fontSize: 14 },
   shopInfo: { flex: 1, marginLeft: 12 },
   shopName: { fontSize: 14, fontWeight: '600', color: colors.navy },
   locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
@@ -107,4 +144,9 @@ const styles = StyleSheet.create({
   ratingText: { fontSize: 12, fontWeight: '600', color: colors.navy, marginLeft: 3 },
   statusBadge: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 20 },
   statusText: { fontSize: 11, fontWeight: '600' },
+  stateBox: { paddingVertical: 40, alignItems: 'center' },
+  stateErrorText: { fontSize: 13, color: '#DC2626', marginBottom: 8 },
+  stateRetryButton: { paddingHorizontal: 14, paddingVertical: 8, backgroundColor: colors.mist, borderRadius: 8 },
+  stateRetryText: { fontSize: 13, fontWeight: '600', color: colors.navy },
+  stateEmptyText: { fontSize: 13, color: colors.textMuted },
 });
