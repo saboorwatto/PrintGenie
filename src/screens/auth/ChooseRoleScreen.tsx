@@ -13,11 +13,11 @@ const roles = [
 export default function ChooseRoleScreen({ navigation }: any) {
   const [selected, setSelected] = useState('customer');
 
-  const handleContinue = () => {
+    const handleContinue = () => {
     if (selected === 'shopowner') {
-      navigation.getParent()?.navigate('ShopOwner');
+      navigation?.navigate?.('ShopOwner');
     } else {
-      navigation.navigate('AuthLogin', { role: selected });
+      navigation?.navigate?.('SignUp', { role: selected });
     }
   };
 
