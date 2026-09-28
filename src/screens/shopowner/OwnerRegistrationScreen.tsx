@@ -107,8 +107,10 @@ export default function OwnerRegistrationScreen({ navigation }: any) {
 
         <Text style={styles.loginPrompt}>
           Already registered?{' '}
-          <Text style={styles.loginLink} onPress={() => navigation?.navigate?.('OwnerLogin')}>
-            Log in
+                   <Text
+            style={styles.loginLink}
+            onPress={() => navigation?.getParent?.()?.navigate?.('Auth', { screen: 'AuthLogin', params: { role: 'shopowner' } })}
+          >            Log in
           </Text>
         </Text>
       </ScrollView>

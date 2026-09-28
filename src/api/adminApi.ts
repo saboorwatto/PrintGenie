@@ -11,20 +11,27 @@ function authHeaders(): Record<string, string> {
 }
 
 
-export async function fetchDashboardStats() {
-  const res = await fetch(`${API_BASE_URL}/api/admin/dashboard/stats`, {
+export async function fetchDashboardStats(period: string = 'monthly') {
+  const res = await fetch(`${API_BASE_URL}/api/admin/dashboard/stats?period=${period}`, {
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error(`Server responded ${res.status}`);
-  return res.json(); // expected: { totalOrders, customers, totalRevenue }
+  return res.json();
 }
 
-export async function fetchRevenue() {
-  const res = await fetch(`${API_BASE_URL}/api/admin/reports/revenue`, {
+export async function fetchRevenue(period: string = 'monthly') {
+  const res = await fetch(`${API_BASE_URL}/api/admin/reports/revenue?period=${period}`, {
     headers: authHeaders(),
   });
   if (!res.ok) throw new Error(`Server responded ${res.status}`);
-  return res.json(); // expected: [{ label, amount }, ...]
+  return res.json();
+}
+export async function fetchReportsSummary(period: string = 'monthly') {
+  const res = await fetch(`${API_BASE_URL}/api/admin/reports/summary?period=${period}`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error(`Server responded ${res.status}`);
+  return res.json();
 }
 
 export async function fetchUsers() {
@@ -61,10 +68,41 @@ export async function savePricingConfig(config: unknown) {
   return res.json();
 }
 
-export async function fetchAIModelStatus() {
-  const res = await fetch(`${API_BASE_URL}/api/admin/ai-monitoring`, {
+
+export async function promoteUserToAdmin(userId: string) {
+  const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/promote`, {
+    method: 'PUT',
     headers: authHeaders(),
   });
-  if (!res.ok) throw new Error(`Server responded ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || `Server responded ${res.status}`);
+  return data;
+}
+export async function approveShop(shopId: string) {
+  const res = await fetch(`${API_BASE_URL}/api/admin/shops/${shopId}/approve`, {
+    method: 'PUT',
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || `Server responded ${res.status}`);
+  return data;
+}
+
+export async function rejectShop(shopId: string) {
+  const res = await fetch(`${API_BASE_URL}/api/admin/shops/${shopId}/reject`, {
+    method: 'PUT',
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || `Server responded ${res.status}`);
+  return data;
+}
+export async function deleteUser(userId: string) {
+  const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || `Server responded ${res.status}`);
+  return data;
 }

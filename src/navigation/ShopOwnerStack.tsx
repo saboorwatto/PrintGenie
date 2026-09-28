@@ -1,7 +1,5 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import OwnerLoginScreen from '../screens/shopowner/OwnerLoginScreen';
 import OwnerRegistrationScreen from '../screens/shopowner/OwnerRegistrationScreen';
 import ShopOwnerTabs from './ShopOwnerTabs';
 import OwnerProfileScreen from '../screens/shopowner/OwnerProfileScreen';
@@ -12,8 +10,7 @@ const Stack = createNativeStackNavigator();
 
 export default function ShopOwnerStack() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="OwnerLogin" component={OwnerLoginScreen} />
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ShopOwnerTabs">
       <Stack.Screen name="OwnerRegistration" component={OwnerRegistrationScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="ShopOwnerTabs" component={ShopOwnerTabs} />

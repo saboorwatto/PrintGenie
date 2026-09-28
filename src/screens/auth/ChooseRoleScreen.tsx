@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { ArrowLeft, ShoppingCart, Store, Cog } from 'lucide-react-native';
+import { ArrowLeft, ShoppingCart, Store, Cog, LogIn } from 'lucide-react-native';
 import { colors } from '../../theme/colors';
 import PrintGenieLogo from '../../components/PrintGenieLogo';
 
@@ -12,13 +12,9 @@ const roles = [
 
 export default function ChooseRoleScreen({ navigation }: any) {
   const [selected, setSelected] = useState('customer');
-
-    const handleContinue = () => {
-    if (selected === 'shopowner') {
-      navigation?.navigate?.('ShopOwner');
-    } else {
-      navigation?.navigate?.('SignUp', { role: selected });
-    }
+  
+  const handleContinue = () => {
+    navigation?.navigate?.('AuthLogin', { role: selected });
   };
 
   return (
@@ -56,10 +52,9 @@ export default function ChooseRoleScreen({ navigation }: any) {
           );
         })}
       </View>
-
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-        <Text style={styles.continueButtonText}>Continue</Text>
-      </TouchableOpacity>
+                <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+          <Text style={styles.continueButtonText}>Continue</Text>
+        </TouchableOpacity>
     </View>
   );
 }
@@ -91,4 +86,8 @@ const styles = StyleSheet.create({
   roleSubtitle: { fontSize: 12, color: colors.textMuted, marginTop: 2 },
   continueButton: { backgroundColor: colors.navy, borderRadius: 14, paddingVertical: 17, alignItems: 'center' },
   continueButtonText: { color: colors.white, fontSize: 16, fontWeight: '700' },
+    signInButton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    gap: 8, paddingVertical: 14, marginTop: 12},
+  signInButtonText: { color: colors.royalBlue, fontSize: 14, fontWeight: '600' },
 });
