@@ -6,6 +6,8 @@ import ChooseRoleScreen from '../screens/auth/ChooseRoleScreen';
 import AuthLoginScreen from '../screens/auth/AuthLoginScreen';
 import ResetPasswordScreen from '../screens/auth/ResetPasswordScreen';
 import VerifyEmailScreen from '../screens/auth/VerifyEmailScreen';
+import SignUpScreen from '../screens/auth/SignUpScreen';
+import EnterResetCodeScreen from '../screens/auth/EnterResetCodeScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,8 @@ export default function AuthStack() {
       <Stack.Screen name="AuthLogin" component={AuthLoginScreen} />
       <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
       <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="EnterResetCode" component={EnterResetCodeScreen} />
     </Stack.Navigator>
   );
 }
